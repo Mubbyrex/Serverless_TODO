@@ -1,4 +1,4 @@
-# TODO: Change the name of the org
+# Change the name of the org
 org: mubarak
 app: serverless-todo-app
 service: serverless-todo-app
@@ -40,18 +40,18 @@ provider:
           Action:
             - xray:PutTelemetryRecords
             - xray:PutTraceSegments
-          Resource: '*'
+          Resource: "*"
 
 custom:
   documentation:
     api:
       info:
-        version: '1.0.0'
+        version: "1.0.0"
         title: serverless-api
         description: serverless-api
     models:
       - name: CreateTodoRequest
-        contentType: 'application/json'
+        contentType: "application/json"
         schema:
           required:
             - name
@@ -63,7 +63,7 @@ custom:
             dueDate:
               type: string
       - name: UpdateTodoRequest
-        contentType: 'application/json'
+        contentType: "application/json"
         schema:
           required:
             - name
@@ -82,7 +82,7 @@ functions:
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
-  # TODO: Configure this function -
+  # : Configure this function -
   # Provide iamRoleStatements property for performing Actions on DynamoDB
   GetTodos:
     handler: src/lambda/http/getTodos.handler
@@ -92,7 +92,7 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
-    # TODO: Configure this function -
+    # : Configure this function -
     # Provide iamRoleStatements property. Decide the Actions and AWS Resource.
     # To refer to an AWS resource defined in the "Resources" section, you can use "Resource: !GetAtt <resource-name>.Arn"
     # To validate incoming HTTP requests, we have provided the request schemas in function definition below.
@@ -106,7 +106,7 @@ functions:
         Action:
           - xray:PutTraceSegments
         Resource:
-          - '*'
+          - "*"
 
   NewToDo:
     handler: src/lambda/http/createTodo.handler
@@ -128,7 +128,7 @@ functions:
         Action:
           - xray:PutTraceSegments
         Resource:
-          - '*'
+          - "*"
 
   UpdateTodo:
     handler: src/lambda/http/updateTodo.handler
@@ -147,7 +147,7 @@ functions:
         Action:
           - xray:PutTraceSegments
         Resource:
-          - '*'
+          - "*"
 
   DeleteTodo:
     handler: src/lambda/http/deleteTodo.handler
@@ -166,7 +166,7 @@ functions:
         Action:
           - xray:PutTraceSegments
         Resource:
-          - '*'
+          - "*"
 
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
@@ -186,7 +186,7 @@ functions:
 resources:
   Resources:
     # Add necessary AWS resources. You will need at least the following AWS resources
-    # TODO: Fill the properties
+    # : Fill the properties
     # Feel free to change the names as you like.
     GatewayResponseDefault4XX:
       Type: AWS::ApiGateway::GatewayResponse
@@ -199,7 +199,7 @@ resources:
         RestApiId:
           Ref: ApiGatewayRestApi
 
-    # TODO: Create a DynamoDB table with local secondary index and a composite key
+    # : Create a DynamoDB table with local secondary index and a composite key
     TodosTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -227,7 +227,7 @@ resources:
             Projection:
               ProjectionType: ALL
 
-    # TODO: Complete the bucket properties below.
+    # : Complete the bucket properties below.
     # Do not forget to add the CorsConfiguration propoerty
     AttachmentsBucket:
       Type: AWS::S3::Bucket
@@ -236,9 +236,9 @@ resources:
         CorsConfiguration:
           CorsRules:
             - AllowedOrigins:
-                - '*'
+                - "*"
               AllowedHeaders:
-                - '*'
+                - "*"
               AllowedMethods:
                 - GET
                 - PUT
@@ -247,18 +247,18 @@ resources:
                 - HEAD
               MaxAge: 3000
 
-    # TODO: Complete the policy below and attach it to the bucket defined above
+    # : Complete the policy below and attach it to the bucket defined above
     # For cross referencing the name of the bucket, use "!Ref AttachmentsBucket"
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
         PolicyDocument:
           Id: Policy
-          Version: '2012-10-17'
+          Version: "2012-10-17"
           Statement:
             - Sid: PublicReadForGetBucketObjects
               Effect: Allow
-              Principal: '*'
-              Action: 's3:GetObject'
-              Resource: 'arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*'
+              Principal: "*"
+              Action: "s3:GetObject"
+              Resource: "arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*"
         Bucket: !Ref AttachmentsBucket
